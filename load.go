@@ -6,6 +6,7 @@ package properties
 
 import (
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -47,9 +48,13 @@ type Loader struct {
 	IgnoreMissing bool
 }
 
-// Load reads a buffer into a Properties struct.
+// LoadBytes reads a buffer into a Properties struct.
 func (l *Loader) LoadBytes(buf []byte) (*Properties, error) {
 	return l.loadBytes(buf, l.Encoding)
+}
+
+func (l *Loader) LoadReader(buf io.Reader) (*Properties, error) {
+	return l.loadReader(buf, l.Encoding)
 }
 
 // LoadAll reads the content of multiple URLs or files in the given order into
@@ -156,6 +161,9 @@ func (l *Loader) loadBytes(buf []byte, enc Encoding) (*Properties, error) {
 		return p, nil
 	}
 	return p, p.check()
+}
+
+func (l *Loader) loadReader(buf io.Reader, encoding Encoding) (*Properties, error) {
 }
 
 // Load reads a buffer into a Properties struct.
